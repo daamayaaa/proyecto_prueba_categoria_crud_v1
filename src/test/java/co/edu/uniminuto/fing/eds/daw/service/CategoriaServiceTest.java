@@ -44,7 +44,7 @@ class CategoriaServiceTest {
     void listarDebeRetornarTodasLasCategorias() {
         when(categoriaRepository.findAll()).thenReturn(Arrays.asList(categoria));
 
-        var resultado = categoriaService.listar();
+        List<CategoriaDTO> resultado = categoriaService.listar();
 
         assertEquals(1, resultado.size());
         assertEquals("Electrodomesticos", resultado.get(0).getNombre());
