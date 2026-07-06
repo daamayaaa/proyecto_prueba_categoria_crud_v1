@@ -55,7 +55,7 @@ class CategoriaServiceTest {
     void obtenerPorIdDebeRetornarCategoriaExistente() {
         when(categoriaRepository.findById(1)).thenReturn(Optional.of(categoria));
 
-        CategoriaDTO resultado = categoriaService.obtenerPorId(1);
+        CategoriaDTO resultado = categoriaService.obtener(1);
 
         assertEquals(1, resultado.getIdCategoria());
         assertEquals("Electrodomesticos", resultado.getNombre());
@@ -65,7 +65,7 @@ class CategoriaServiceTest {
     void obtenerPorIdDebeRetornarNullSiNoExiste() {
         when(categoriaRepository.findById(99)).thenReturn(Optional.empty());
 
-        CategoriaDTO resultado = categoriaService.obtenerPorId(99);
+        CategoriaDTO resultado = categoriaService.obtener(99);
 
         assertNull(resultado);
     }
