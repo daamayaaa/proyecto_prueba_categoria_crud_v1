@@ -1,0 +1,22 @@
+[
+  {
+    "nombre": "Tecnología",
+    "habilitado": true
+  },
+  {
+    "nombre": "Deportes",
+    "habilitado": true
+  },
+  {
+    "nombre": "Música",
+    "habilitado": false
+  },
+  {
+    "nombre": "Educación",
+    "habilitado": true
+  },
+  {
+    "nombre": "Videojuegos",
+    "habilitado": true
+  }
+]
