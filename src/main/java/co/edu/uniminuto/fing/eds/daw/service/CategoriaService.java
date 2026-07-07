@@ -66,14 +66,24 @@ public class CategoriaService {
         return CategoriaDTO.desdeEntidad(actualizada);
     }
 
-    public void eliminar(Integer id) {
+    public boolean eliminar(Integer id) {
         LOGGER.info("Eliminando la categoria con id {}.", id);
         if (!categoriaRepository.existsById(id)) {
             throw new RecursoNoEncontradoException("No existe una categoria con id " + id);
         }
         categoriaRepository.deleteById(id);
         LOGGER.info("Categoria con id {} eliminada correctamente.", id);
+        return true;
     }
+
+    private CategoriaDTO toDTO(Categoria categoria) {
+        return new CategoriaDTO(categoria.getIdCategoria(), categoria.getNombre(), categoria.getHabilitado());
+    }
+
+    private Categoria toEntity(CategoriaDTO dto) {
+        return new Categoria(dto.getIdCategoria(), dto.getNombre(), dto.getHabilitado());
+    }
+
 
     private void validar(CategoriaDTO categoriaDTO) {
         if (categoriaDTO == null || categoriaDTO.getNombre() == null || categoriaDTO.getNombre().trim().isEmpty()) {
