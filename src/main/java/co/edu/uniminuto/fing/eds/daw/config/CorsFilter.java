@@ -11,18 +11,26 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 /**
- * Filtro CORS manual y centralizado.
- * Permite que el backend sea consumido desde cualquier frontend
- * sin errores de CORS, incluyendo el manejo de preflight (OPTIONS).
+ * Filtro que centraliza toda la logica de CORS de la aplicacion.
+ * Permite cualquier origen, los metodos requeridos y responde
+ * directamente a las solicitudes de preflight (OPTIONS) sin
+ * necesidad de llegar al controlador.
  */
 @Component
+@Order(1)
 public class CorsFilter implements Filter {
 
+    private static final Logger LOGGER = LogManager.getLogger(CorsFilter.class);
+
     @Override
-    public void init(FilterConfig filterConfig) {
+    public void init(FilterConfig filterConfig) throws ServletException {
+        LOGGER.info("Filtro CORS inicializado.");
     }
 
     @Override
@@ -37,14 +45,22 @@ public class CorsFilter implements Filter {
         httpResponse.setHeader("Access-Control-Max-Age", "3600");
 
         if ("OPTIONS".equalsIgnoreCase(httpRequest.getMethod())) {
+            LOGGER.info("Solicitud preflight OPTIONS recibida para {}.", httpRequest.getRequestURI());
             httpResponse.setStatus(HttpServletResponse.SC_OK);
             return;
         }
 
-        chain.doFilter(request, response);
+        try {
+            chain.doFilter(request, response);
+        } catch (Exception e) {
+            LOGGER.error("Error procesando la solicitud {} {}: {}", httpRequest.getMethod(),
+                    httpRequest.getRequestURI(), e.getMessage(), e);
+            throw e;
+        }
     }
 
     @Override
     public void destroy() {
+        LOGGER.info("Filtro CORS finalizado.");
     }
 }

@@ -2,7 +2,8 @@ package co.edu.uniminuto.fing.eds.daw.controller;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -17,48 +18,55 @@ import org.springframework.web.bind.annotation.RestController;
 import co.edu.uniminuto.fing.eds.daw.dto.CategoriaDTO;
 import co.edu.uniminuto.fing.eds.daw.service.CategoriaService;
 
+/**
+ * Controlador REST que expone el CRUD de Categoria.
+ * El manejo de CORS se realiza de forma centralizada en config.CorsFilter,
+ * por lo que este controlador no requiere anotaciones adicionales de CORS.
+ */
 @RestController
 @RequestMapping("/categorias")
 public class CategoriaController {
 
-    @Autowired
-    private CategoriaService categoriaService;
+    private static final Logger LOGGER = LogManager.getLogger(CategoriaController.class);
+
+    private final CategoriaService categoriaService;
+
+    public CategoriaController(CategoriaService categoriaService) {
+        this.categoriaService = categoriaService;
+    }
 
     @GetMapping
     public ResponseEntity<List<CategoriaDTO>> listar() {
-        return ResponseEntity.ok(categoriaService.listar());
+        LOGGER.info("GET /categorias");
+        List<CategoriaDTO> categorias = categoriaService.listar();
+        return ResponseEntity.ok(categorias);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<CategoriaDTO> obtener(@PathVariable Integer id) {
-        CategoriaDTO dto = categoriaService.obtener(id);
-        if (dto == null) {
-            return ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.ok(dto);
+    public ResponseEntity<CategoriaDTO> obtenerPorId(@PathVariable Integer id) {
+        LOGGER.info("GET /categorias/{}", id);
+        CategoriaDTO categoria = categoriaService.obtenerPorId(id);
+        return ResponseEntity.ok(categoria);
     }
 
     @PostMapping
-    public ResponseEntity<CategoriaDTO> crear(@RequestBody CategoriaDTO dto) {
-        CategoriaDTO creada = categoriaService.crear(dto);
+    public ResponseEntity<CategoriaDTO> crear(@RequestBody CategoriaDTO categoriaDTO) {
+        LOGGER.info("POST /categorias");
+        CategoriaDTO creada = categoriaService.crear(categoriaDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(creada);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<CategoriaDTO> actualizar(@PathVariable Integer id, @RequestBody CategoriaDTO dto) {
-        CategoriaDTO actualizada = categoriaService.actualizar(id, dto);
-        if (actualizada == null) {
-            return ResponseEntity.notFound().build();
-        }
+    public ResponseEntity<CategoriaDTO> actualizar(@PathVariable Integer id, @RequestBody CategoriaDTO categoriaDTO) {
+        LOGGER.info("PUT /categorias/{}", id);
+        CategoriaDTO actualizada = categoriaService.actualizar(id, categoriaDTO);
         return ResponseEntity.ok(actualizada);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> eliminar(@PathVariable Integer id) {
-        boolean eliminado = categoriaService.eliminar(id);
-        if (!eliminado) {
-            return ResponseEntity.notFound().build();
-        }
+        LOGGER.info("DELETE /categorias/{}", id);
+        categoriaService.eliminar(id);
         return ResponseEntity.noContent().build();
     }
 }
