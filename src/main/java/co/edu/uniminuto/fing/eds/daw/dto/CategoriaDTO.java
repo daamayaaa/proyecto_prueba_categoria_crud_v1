@@ -27,5 +27,4 @@ public class CategoriaDTO {
     public Categoria haciaEntidad() {
         return new Categoria(this.idCategoria, this.nombre, this.habilitado);
     }
-    }
 }
