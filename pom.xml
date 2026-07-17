@@ -15,7 +15,7 @@
     <artifactId>proyecto_prueba_categoria_crud_v1</artifactId>
     <version>1.0.0</version>
     <packaging>jar</packaging>
-    <name>proyecto_prueba_categoria_crud_v2</name>
+    <name>proyecto_prueba_categoria_crud_v1</name>
     <description>CRUD REST por capas para la entidad Categoria</description>
 
     <properties>
@@ -23,6 +23,8 @@
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<springdoc.version>1.6.15</springdoc.version>
+
     </properties>
 
     <dependencies>
